@@ -10,8 +10,10 @@ export default class SearchQueriesController {
     return response.created(searchQuery);
   }
 
-  async index({ response }: HttpContext) {
-    const searchQueries = await SearchQuery.query();
+  async index({ request, response }: HttpContext) {
+    const page = request.input("page", 1);
+    const perPage = request.input("per_page", 5);
+    const searchQueries = await SearchQuery.query().paginate(page, perPage);
     return response.json(searchQueries);
   }
 
