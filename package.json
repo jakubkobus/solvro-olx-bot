@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "@adonisjs/core": "^6.17.2",
+    "pg": "^8.14.1",
     "reflect-metadata": "^0.2.2"
   },
   "hotHook": {
