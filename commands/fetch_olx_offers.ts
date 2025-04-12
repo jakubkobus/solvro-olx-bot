@@ -49,7 +49,7 @@ export default class FetchOlxOffers extends BaseCommand {
         const createdAt = new Date(offer.created_time);
 
         if (createdAt > refreshedAt) {
-          this.logger.info(
+          this.logger.success(
             `Znaleziono nowe mieszkanie spelniajace wymagania dla zapytania ${sq.id}: ${offer.title}`,
           );
           sq.refreshedAt = DateTime.now();
