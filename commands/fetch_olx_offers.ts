@@ -17,16 +17,18 @@ export default class FetchOlxOffers extends BaseCommand {
     const searchQueries = await SearchQuery.all();
 
     for (const sq of searchQueries) {
-      const url =
-        `https://www.olx.pl/api/v1/offers` +
-        `?category_id=${sq.categoryId}` +
-        `&city_id=${sq.locationId}` +
-        `&district_id=${sq.districtId}` +
-        `&region_id=${sq.regionId}` +
-        `&filter_float_price:from=${sq.priceMin}` +
-        `&filter_float_price:to=${sq.priceMax}` +
-        `&sort_by=created_at:desc` +
-        `&limit=${sq.paginationLimit}`;
+      const url = new URL("https://www.olx.pl/api/v1/offers");
+      url.searchParams.append("category_id", sq.categoryId.toString());
+      url.searchParams.append("city_id", sq.locationId.toString());
+      url.searchParams.append("district_id", sq.districtId.toString());
+      url.searchParams.append("region_id", sq.regionId.toString());
+      url.searchParams.append(
+        "filter_float_price:from",
+        sq.priceMin.toString(),
+      );
+      url.searchParams.append("filter_float_price:to", sq.priceMax.toString());
+      url.searchParams.append("sort_by", "created_at:desc");
+      url.searchParams.append("limit", sq.paginationLimit.toString());
 
       const response = await fetch(url);
       const data = (await response.json()) as { data: OLXOffer[] };
