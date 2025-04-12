@@ -7,7 +7,7 @@ export default class SearchQuery extends BaseModel {
   declare id: number;
 
   @column()
-  declare categoryId: string;
+  declare categoryId: number;
 
   @column()
   declare priceMin: number;
@@ -27,7 +27,7 @@ export default class SearchQuery extends BaseModel {
   @column()
   declare paginationLimit: number;
 
-  @column()
+  @column.dateTime({ autoCreate: true })
   declare refreshedAt: DateTime;
 
   @column.dateTime({ autoCreate: true })
