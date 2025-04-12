@@ -11,7 +11,7 @@ export default class extends BaseSchema {
       table.float("price_min");
       table.float("price_max");
       table.integer("location_id");
-      table.integer("disctrict_id");
+      table.integer("district_id");
       table.integer("region_id");
       table.integer("pagination_limit");
 
