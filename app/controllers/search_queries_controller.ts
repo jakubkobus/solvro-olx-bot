@@ -30,4 +30,12 @@ export default class SearchQueriesController {
     await searchQuery.save();
     return response.json(searchQuery);
   }
+
+  async destroy({ params, response }: HttpContext) {
+    const searchQuery = await SearchQuery.findOrFail(params.id);
+    await searchQuery.delete();
+    return response.json({
+      message: "Search query deleted successfully",
+    });
+  }
 }
