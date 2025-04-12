@@ -34,7 +34,7 @@ export default class SearchQueriesController {
   async destroy({ params, response }: HttpContext) {
     const searchQuery = await SearchQuery.findOrFail(params.id);
     await searchQuery.delete();
-    return response.status(200).json({
+    return response.json({
       message: "Search query deleted successfully",
     });
   }
