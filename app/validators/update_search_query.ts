@@ -9,5 +9,6 @@ export const updateSearchQueryValidator = vine.compile(
     districtId: vine.number().optional(),
     regionId: vine.number().optional(),
     paginationLimit: vine.number().positive().optional(),
+    email: vine.string().email().optional(),
   }),
 );
