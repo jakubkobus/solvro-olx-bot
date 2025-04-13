@@ -15,6 +15,8 @@ export default class extends BaseSchema {
       table.integer("region_id");
       table.integer("pagination_limit");
 
+      table.string("email");
+
       table.timestamp("refreshed_at");
       table.timestamp("created_at");
       table.timestamp("updated_at");
