@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pl-PL">
+  <head>
+    <meta charset="UTF-8">
+    <title>Znalezione oferty OLX</title>
+  </head>
+
+  <body>
+    <h1>Nowe oferty pasujące do wyszukiwania {{ id }}</h1>
+    @each(offer in offers)
+      <div class="offer">
+        <h2>{{ offer.title }}</h2>
+        <p><strong>Cena:</strong> {{ offer.price }}</p>
+        <p><strong>Lokalizacja:</strong> {{ offer.city }}, {{ offer.district }}</p>
+        <p>{{{ offer.description }}}</p>
+        <a href="{{ offer.url }}" target="_blank">Zobacz ofertę</a>
+      </div>
+    @end
+  </body>
+</html>

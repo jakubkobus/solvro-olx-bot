@@ -55,8 +55,6 @@ export default class FetchOlxOffers extends BaseCommand {
           this.logger.success(
             `Found new offer for search query ${sq.id}:\n${offer.title}`,
           );
-          sq.refreshedAt = DateTime.now();
-          await sq.save();
 
           const priceParam = offer.params.find(
             (param) => param.key === "price",
@@ -80,7 +78,7 @@ export default class FetchOlxOffers extends BaseCommand {
       }
 
       try {
-        await mail.sendLater(async (message) => {
+        await mail.send(async (message) => {
           message
             .from("test@solvro.pl")
             .to(sq.email)
@@ -94,6 +92,9 @@ export default class FetchOlxOffers extends BaseCommand {
         this.logger.info(
           `Sent email with new offers to ${sq.email} for search query ${sq.id}`,
         );
+
+        sq.refreshedAt = DateTime.now();
+        await sq.save();
       } catch (error) {
         this.logger.error(
           `Failed to send email to ${sq.email} for search query ${sq.id}`,
