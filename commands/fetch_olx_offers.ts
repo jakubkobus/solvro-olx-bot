@@ -2,6 +2,7 @@ import { DateTime } from "luxon";
 
 import { BaseCommand } from "@adonisjs/core/ace";
 import type { CommandOptions } from "@adonisjs/core/types/ace";
+import mail from "@adonisjs/mail/services/main";
 
 import SearchQuery from "#models/search_query";
 import type { OLXOffer } from "#types/olx_offer";
@@ -45,17 +46,59 @@ export default class FetchOlxOffers extends BaseCommand {
       }
 
       const refreshedAt = sq.refreshedAt.toJSDate();
+      let newOffers = [];
 
       for (const offer of data.data) {
         const createdAt = new Date(offer.created_time);
 
         if (createdAt > refreshedAt) {
           this.logger.success(
-            `Znaleziono nowe mieszkanie spelniajace wymagania dla zapytania ${sq.id}: ${offer.title}`,
+            `Found new offer for search query ${sq.id}:\n${offer.title}`,
           );
           sq.refreshedAt = DateTime.now();
           await sq.save();
+
+          const priceParam = offer.params.find(
+            (param) => param.key === "price",
+          );
+          const price = priceParam?.value
+            ? `${priceParam.value.value} ${priceParam.value.currency}`
+            : "Brak ceny";
+
+          const city = offer.location?.city?.name || "Brak miasta";
+          const district = offer.location?.district?.name || "Brak dzielnicy";
+
+          newOffers.push({
+            title: offer.title,
+            price,
+            city,
+            district,
+            description: offer.description,
+            url: offer.url,
+          });
         }
+      }
+
+      try {
+        await mail.sendLater(async (message) => {
+          message
+            .from("test@solvro.pl")
+            .to(sq.email)
+            .subject("Znalezione oferty OLX")
+            .htmlView("emails/olx_offer", {
+              offers: newOffers,
+              id: sq.id,
+            });
+        });
+
+        this.logger.info(
+          `Sent email with new offers to ${sq.email} for search query ${sq.id}`,
+        );
+      } catch (error) {
+        this.logger.error(
+          `Failed to send email to ${sq.email} for search query ${sq.id}`,
+        );
+        this.logger.error(error);
       }
     }
   }
