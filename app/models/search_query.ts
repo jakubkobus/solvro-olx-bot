@@ -27,6 +27,9 @@ export default class SearchQuery extends BaseModel {
   @column()
   declare paginationLimit: number;
 
+  @column()
+  declare email: string;
+
   @column.dateTime({ autoCreate: true })
   declare refreshedAt: DateTime;
 
